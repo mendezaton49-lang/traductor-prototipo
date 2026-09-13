@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAROPA - vacabulario basico · Lengua Viva</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #ffffff;
+            height: 70px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo {
+            font-size: 24px;
+            color: #0066cc;
+        }
+        .title-container h1 {
+            font-size: 14px;
+            color: #1a202c;
+            font-weight: bold;
+        }
+        .title-container p {
+            font-size: 11px;
+            color: #718096;
+        }
+        .settings-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #4a5568;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            gap: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        select {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+        .swap-btn {
+            background: #fff;
+            border: 1px solid #cbd5e0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        .swap-btn:hover { background: #f7fafc; }
+        .text-area-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 25px;
+        }
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .panel.output {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 15px;
+            background: transparent;
+            color: #2d3748;
+        }
+        .panel.output textarea {
+            color: #4a5568;
+            font-style: italic;
+        }
+        .panel-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #a0aec0;
+        }
+        .action-btn:hover { color: #4a5568; }
+        .quote-section {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .quote-section .icon { font-size: 24px; color: #cbd5e0; }
+        .quote-section p { font-size: 13px; font-style: italic; color: #718096; margin-top: 5px; }
+        nav {
+            background: #ffffff;
+            height: 60px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-item {
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            color: #718096;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .nav-item.active { color: #0066cc; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            header { padding: 0 20px; }
+            .text-area-container {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            textarea { height: 100px; }
+            .top-bar { padding: 10px 15px; justify-content: space-between; }
+            select { flex: 1; font-size: 13px; padding: 6px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="logo">🐦</span>
+            <div class="title-container">
+                <h1>MAROPA</h1>
+                <p>Traductor · Lengua Viva</p>
+            </div>
+        </div>
+        <button class="settings-btn">⚙</button>
+    </header>
+
+    <main>
+        <div class="card">
+            <div class="top-bar">
+                <select id="langLeft" onchange="actualizarDireccion()">
+                    <option value="Maropa">Maropa</option>
+                    <option value="Espanol">Español</option>
+                </select>
+                <button class="swap-btn" onclick="intercambiarIdiomas()">⇄</button>
+                <select id="langRight" onchange="actualizarDireccionInversa()">
+                    <option value="Espanol">Español</option>
+                    <option value="Maropa">Maropa</option>
+                </select>
+            </div>
+
+            <div class="text-area-container">
+                <div class="panel">
+                    <textarea id="textInput" placeholder="Introduce palabra..." oninput="traducir()"></textarea>
+                    <div class="panel-footer">
+                        <span id="counter">0/500</span>
+                        <button class="action-btn" onclick="borrarTexto()">✕</button>
+                    </div>
+                </div>
+
+                <div class="panel output">
+                    <textarea id="textOutput" readonly placeholder="Traducción aparecerá aquí..."></textarea>
+                    <div class="panel-footer">
+                        <span></span>
+                        <button class="action-btn" onclick="copiarTexto()">📋</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <div class="icon">🖼️</div>
+            <p>Cada palabra mantiene viva nuestra lengua.</p>
+        </div>
+    </main>
+
+    <nav>
+        <button class="nav-item active"><span>🏠</span> Traducir</button>
+        <button class="nav-item"><span>⚙</span> Ajustes</button>
+    </nav>
+
+    <script>
+        let diccionario = [];
+
+        async function cargarDatosCSV() {
+            try {
+                const respuesta = await fetch('vocabulario.csv');
+                if (!respuesta.ok) throw new Error("No se pudo cargar el archivo CSV");
+                
+                const textoCSV = await respuesta.text();
+                procesarCSV(textoCSV);
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("textOutput").value = "⚠️ No se pudo cargar el archivo vocabulario.csv.";
+            }
+        }
+
+        function parsearLineaCSV(linea) {
+            // Respeta comas dentro de comillas dobles, ej: "sareme, sare sare ",plateado
+            const columnas = [];
+            let actual = '';
+            let dentroComillas = false;
+
+            for (let i = 0; i < linea.length; i++) {
+                const char = linea[i];
+
+                if (char === '"') {
+                    dentroComillas = !dentroComillas;
+                } else if (char === ',' && !dentroComillas) {
+                    columnas.push(actual);
+                    actual = '';
+                } else {
+                    actual += char;
+                }
+            }
+            columnas.push(actual);
+
+            return columnas.map(c => c.trim());
+        }
+
+        function procesarCSV(texto) {
+            const lineas = texto.split('\n');
+            diccionario = [];
+            
+            for (let i = 1; i < lineas.length; i++) {
+                const linea = lineas[i].trim();
+                if (!linea) continue;
+                
+                const columnas = parsearLineaCSV(linea);
+                const maropa = columnas[0] ? columnas[0].trim().toLowerCase() : '';
+                const espanol = columnas[1] ? columnas[1].trim().toLowerCase() : '';
+
+                // Filtra filas de categoría (ej: "ANIMALES DOMESTICOS,") que no tienen traducción
+                if (maropa && espanol) {
+                    diccionario.push({ maropa, espanol });
+                }
+            }
+        }
+
+        window.onload = cargarDatosCSV;
+
+        function traducir() {
+            const input = document.getElementById("textInput");
+            const output = document.getElementById("textOutput");
+            const counter = document.getElementById("counter");
+            const langLeft = document.getElementById("langLeft").value;
+
+            const texto = input.value.trim().toLowerCase();
+            counter.innerText = `${texto.length}/500`;
+
+            if (!texto) {
+                output.value = "";
+                output.style.fontStyle = "italic";
+                output.style.color = "#4a5568";
+                return;
+            }
+
+            let exacto = null;
+            let sugerencias = [];
+
+            if (langLeft === "Maropa") {
+                exacto = diccionario.find(item => item.maropa === texto);
+                if (!exacto) {
+                    sugerencias = diccionario.filter(item => item.maropa.includes(texto));
+                }
+            } else {
+                exacto = diccionario.find(item => item.espanol === texto);
+                if (!exacto) {
+                    sugerencias = diccionario.filter(item => item.espanol.includes(texto));
+                }
+            }
+
+            if (exacto) {
+                output.style.fontStyle = "normal";
+                output.style.color = "#2d3748";
+                output.value = (langLeft === "Maropa") ? exacto.espanol : exacto.maropa;
+            } else if (sugerencias.length > 0) {
+                output.style.fontStyle = "normal";
+                output.style.color = "#d69e2e";
+                let listaSugeridas = sugerencias.map(s => `${s.maropa} ➔ ${s.espanol}`).join('\n');
+                output.value = `No exacto. Quizás quisiste decir:\n${listaSugeridas}`;
+            } else {
+                output.style.fontStyle = "italic";
+                output.style.color = "#e53e3e";
+                output.value = "Término no encontrado ni aproximado.";
+            }
+        }
+
+        function borrarTexto() {
+            document.getElementById("textInput").value = "";
+            document.getElementById("textOutput").value = "";
+            document.getElementById("counter").innerText = "0/500";
+        }
+
+        function intercambiarIdiomas() {
+            const left = document.getElementById("langLeft");
+            const right = document.getElementById("langRight");
+            const temp = left.value;
+            left.value = right.value;
+            right.value = temp;
+            traducir();
+        }
+
+        function actualizarDireccion() {
+            const left = document.getElementById("langLeft").value;
+            document.getElementById("langRight").value = (left === "Maropa") ? "Espanol" : "Maropa";
+            traducir();
+        }
+
+        function actualizarDireccionInversa() {
+            const right = document.getElementById("langRight").value;
+            document.getElementById("langLeft").value = (right === "Maropa") ? "Espanol" : "Maropa";
+            traducir();
+        }
+
+        function copiarTexto() {
+            const output = document.getElementById("textOutput");
+            navigator.clipboard.writeText(output.value);
+        }
+    </script>
+</body>
+</html>
